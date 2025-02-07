@@ -21,12 +21,14 @@ def run_litellm_non_stream():
 def run_litellm_stream():
     """Calls local server in stream mode using LiteLLM."""
     try:
-        response = completion(
+        response_stream = completion(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": "Hello from a streaming test"}],
             stream=True
         )
-        print("Streaming response:", response)
+        print("Streaming response:")
+        for chunk in response_stream:
+            print(chunk, end="", flush=True)
     except Exception as e:
         print("Error in streaming mode:", e)
 
