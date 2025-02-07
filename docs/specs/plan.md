@@ -2,7 +2,7 @@
 
 ## Project Environment Setup
 - [x] Initialize the project with a TypeScript setup (package.json, tsconfig.json, etc.).
-- [ ] Install dependencies: express, dotenv, morgan, typescript, ts-node, @types/node, @types/express, and @types/morgan.
+- [x] Install dependencies: express, dotenv, morgan, typescript, ts-node, @types/node, @types/express, and @types/morgan.
 
 ## REST API Server Implementation (src/server.ts)
 - [ ] Create an asynchronous REST API with Express.
