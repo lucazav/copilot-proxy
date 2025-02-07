@@ -1,0 +1,12 @@
+{
+  "name": "copilot-proxy",
+  "version": "1.0.0",
+  "description": "copilot-proxy for aider",
+  "license": "ISC",
+  "author": "Lutz Leonhardt",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
