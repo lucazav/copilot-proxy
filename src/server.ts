@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import { ChatCompletionRequest, ChatCompletionChunk, ChatCompletionChunkDelta } from './types';
 
 // Load environment variables from .env file if present
 dotenv.config();
@@ -15,8 +16,8 @@ app.use(express.json());
 app.use(morgan('combined'));
 
 // POST /v1/chat/completions endpoint implementation
-app.post('/v1/chat/completions', async (req: Request, res: Response) => {
-  const stream = req.body.stream;
+app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res) => {
+  const { stream } = req.body;
 
   console.log(req.body);
 
@@ -30,14 +31,14 @@ app.post('/v1/chat/completions', async (req: Request, res: Response) => {
     let index = 0;
 
     const sendChunk = () => {
-      const baseChunk = {
+      const baseChunk: ChatCompletionChunk = {
         id: "chatcmpl-mock",
         object: "chat.completion.chunk",
         created: 1234567890,
         model: "gpt-3.5-turbo",
         choices: [
           {
-            delta: {} as any,
+            delta: {} as ChatCompletionChunkDelta,
             index: 0,
             finish_reason: '',
           }
