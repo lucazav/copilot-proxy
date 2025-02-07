@@ -5,8 +5,8 @@
 - [x] Install dependencies: express, dotenv, morgan, typescript, ts-node, @types/node, @types/express, and @types/morgan.
 
 ## REST API Server Implementation (src/server.ts)
-- [ ] Create an asynchronous REST API with Express.
-- [ ] Create a POST endpoint at /v1/chat/completions that:
+- [x] Create an asynchronous REST API with Express.
+- [x] Create a POST endpoint at /v1/chat/completions that:
   - Parses a JSON payload.
   - Checks for a boolean parameter `stream`.
   - If `stream` is false or not provided, returns a JSON response with the following mock data:
@@ -45,7 +45,7 @@
 
 ## Configuration Management and Logging
 - [ ] Create a configuration module (e.g., src/config.ts) to load server configurations (port, log levels, etc.) from environment variables with default values.
-- [ ] Integrate logging (e.g., using morgan) to log incoming requests and streaming events.
+- [x] Integrate logging (e.g., using morgan) to log incoming requests and streaming events.
 
 ## Documentation
 - [ ] Update the readme.md file with:
