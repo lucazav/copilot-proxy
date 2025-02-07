@@ -37,7 +37,7 @@ app.post('/v1/chat/completions', async (req: Request, res: Response) => {
           {
             delta: {} as any,
             index: 0,
-            finish_reason: null,
+            finish_reason: '',
           }
         ]
       };

@@ -7,14 +7,6 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
-}
-{
-  "name": "rest-api-server",
-  "version": "1.0.0",
-  "description": "A REST API server using Express and TypeScript",
-  "scripts": {
     "build": "tsc",
     "start": "ts-node src/server.ts"
   },
