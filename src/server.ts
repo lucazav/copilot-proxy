@@ -24,24 +24,47 @@ app.post('/v1/chat/completions', async (req: Request, res: Response) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
 
-    let count = 0;
-    const maxChunks = 3;
+    const chunks = ["This is a", " mock", " response."];
+    let index = 0;
 
     const sendChunk = () => {
-      count++;
-      // Prepare a JSON object for this chunk
-      const chunkData = { message: `This is chunk ${count}` };
-      // Write the chunk in the event stream format
-      res.write(`data: ${JSON.stringify(chunkData)}\n\n`);
+      const baseChunk = {
+        id: "chatcmpl-mock",
+        object: "chat.completion.chunk",
+        created: 1234567890,
+        model: "gpt-3.5-turbo",
+        choices: [
+          {
+            delta: {} as any,
+            index: 0,
+            finish_reason: null,
+          }
+        ]
+      };
 
-      console.log(`Sent chunk ${count}`);
+      // For the first chunk, include the role.
+      if (index === 0) {
+        baseChunk.choices[0].delta.role = "assistant";
+      }
+      // Append the content piece.
+      baseChunk.choices[0].delta.content = chunks[index];
 
-      if (count < maxChunks) {
-        // Schedule the next chunk
-        setTimeout(sendChunk, 1000); // Delay 1 second between chunks
+      // On the final chunk, specify the finish reason.
+      if (index === chunks.length - 1) {
+        baseChunk.choices[0].finish_reason = "stop";
+      }
+
+      // Send the chunk in event stream format.
+      res.write(`data: ${JSON.stringify(baseChunk)}\n\n`);
+      console.log(`Sent chunk ${index + 1}`);
+
+      index++;
+      if (index < chunks.length) {
+        // Schedule the next chunk after 1 second.
+        setTimeout(sendChunk, 1000);
       } else {
-        // Finalize the stream
-        res.write(`data: [DONE]\n\n`);
+        // Finalize the stream.
+        res.write("data: [DONE]\n\n");
         res.end();
       }
     };
