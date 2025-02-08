@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-import { ChatCompletionRequest, ChatCompletionChunk, ChatCompletionChunkDelta } from './types';
+import {ChatCompletionRequest, ChatCompletionChunk, ChatCompletionChunkDelta, ChatCompletionResponse} from './types';
 import { processChatRequest } from './extension';
 
 // Load environment variables from .env file if present
@@ -37,7 +37,7 @@ app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res)
 
     try {
       // Call processChatRequest and expect an async iterator for streaming.
-      const streamIterator = processChatRequest(req.body) as AsyncIterable<ChatCompletionChunk>;
+      const streamIterator = await processChatRequest(req.body) as AsyncIterable<ChatCompletionChunk>;
       for await (const chunk of streamIterator) {
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
         console.log(`Sent chunk with content: ${chunk.choices[0].delta.content}`);
