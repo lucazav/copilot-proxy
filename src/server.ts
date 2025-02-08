@@ -19,6 +19,8 @@ app.use(morgan('combined'));
 app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res) => {
   const { stream } = req.body;
 
+  console.log(JSON.stringify(req.body));
+
   if (stream) {
     // Initiate streaming response
     res.setHeader('Content-Type', 'text/event-stream');
