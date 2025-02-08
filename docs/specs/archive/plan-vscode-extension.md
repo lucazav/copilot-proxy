@@ -7,11 +7,11 @@ Step 1: Update package.json
 ---------------------------
 - Add the following extension metadata:
   - "engines": { "vscode": "^1.70.0" }
-  - "activationEvents": [ "onCommand:my-extension.helloWorld" ]
+  - "activationEvents": [ "onCommand:my-extension.copilot-proxy" ]
   - "contributes": { 
         "commands": [
             {
-              "command": "my-extension.helloWorld",
+              "command": "my-extension.copilot-proxy",
               "title": "Hello World"
             }
         ]
@@ -69,9 +69,9 @@ Step 4: Create src/extension.ts
       }
     });
 
-    // Register the "helloWorld" command
+    // Register the "copilot-proxy" command
     context.subscriptions.push(
-      vscode.commands.registerCommand('my-extension.helloWorld', () => {
+      vscode.commands.registerCommand('my-extension.copilot-proxy', () => {
         vscode.window.showInformationMessage('Hello World from My Extension!');
       })
     );
@@ -126,5 +126,5 @@ This plan integrates the Express server into the VS Code extension lifecycle by:
 Follow these steps to ensure that:
 - The VS Code extension loads correctly.
 - The Express server starts when the extension is activated.
-- The "my-extension.helloWorld" command displays the expected message.
+- The "my-extension.copilot-proxy" command displays the expected message.
 - The server is gracefully stopped on extension deactivation.
