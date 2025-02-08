@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { startServer } from './server';
 
-let serverInstance: ReturnType<typeof startServer>;
+let serverInstance: ReturnType<typeof startServer> | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('Extension "my-extension" is now active!');
