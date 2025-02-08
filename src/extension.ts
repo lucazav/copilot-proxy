@@ -45,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
   if (serverInstance) {
     serverInstance.close();
+    serverInstance = undefined;
     console.log('Express server has been stopped on deactivation.');
   }
 }
