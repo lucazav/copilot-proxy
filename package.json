@@ -10,13 +10,18 @@
     "vscode": "^1.70.0"
   },
   "activationEvents": [
-    "onCommand:my-extension.copilot-proxy"
+    "onCommand:Copilot Proxy - Start Server",
+    "onCommand:Copilot Proxy - Stop Server"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "my-extension.copilot-proxy",
-        "title": "Copilot Proxy"
+        "command": "Copilot Proxy - Start Server",
+        "title": "Copilot Proxy - Start Server"
+      },
+      {
+        "command": "Copilot Proxy - Stop Server",
+        "title": "Copilot Proxy - Stop Server"
       }
     ]
   },
