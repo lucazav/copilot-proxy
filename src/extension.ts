@@ -52,38 +52,78 @@ export function deactivate() {
 }
 
 export async function processChatRequest(request: ChatCompletionRequest): Promise<AsyncIterable<ChatCompletionChunk> | ChatCompletionResponse> {
+  // Map request messages to vscode.LanguageModelChatMessage format.
+  const chatMessages = request.messages.map((message) =>
+    vscode.LanguageModelChatMessage.User(message.content)
+  );
+  console.log("Mapped chat messages:", chatMessages);
+
+  // Select the language model based on the provided model name.
+  const [selectedModel] = await vscode.lm.selectChatModels({
+    vendor: "copilot",
+    family: request.model,
+  });
+  if (!selectedModel) {
+    console.error(`No language model available for model: ${request.model}`);
+    throw new Error(`No language model available for model: ${request.model}`);
+  }
+  console.log(`Selected language model: ${request.model}`);
+
   if (request.stream) {
-    // Async generator for streaming response.
+    // Streaming mode: return an async generator yielding simulated response chunks.
     return (async function* () {
-      const chunks = ["This is a", " mock", " response."];
-      for (let i = 0; i < chunks.length; i++) {
-        yield {
-          id: "chatcmpl-mock-stream",
+      const simulatedFragments = [
+        "This is a",
+        " simulated",
+        " streamed response.",
+      ];
+      for (let i = 0; i < simulatedFragments.length; i++) {
+        const chunk: ChatCompletionChunk = {
+          id: `chatcmpl-stream-${i}`,
           object: "chat.completion.chunk",
           created: Date.now(),
           model: request.model,
-          choices: [{
-            delta: {
-              ...(i === 0 ? { role: "assistant" } : {}),
-              content: chunks[i],
+          choices: [
+            {
+              delta: {
+                ...(i === 0 ? { role: "assistant" } : {}),
+                content: simulatedFragments[i],
+              },
+              index: 0,
+              finish_reason: i === simulatedFragments.length - 1 ? "stop" : "",
             },
-            index: 0,
-            finish_reason: i === chunks.length - 1 ? "stop" : "",
-          }]
+          ],
         };
+        console.log(`Yielding chunk: ${JSON.stringify(chunk)}`);
+        yield chunk;
       }
     })();
   } else {
-    return {
-      id: "chatcmpl-mock-nonstream",
+    // Non-streaming mode: accumulate simulated fragments and return the full response.
+    const simulatedFragments = [
+      "This is a",
+      " simulated non-streamed",
+      " response.",
+    ];
+    const fullContent = simulatedFragments.join("");
+    const response: ChatCompletionResponse = {
+      id: "chatcmpl-nonstream",
       object: "chat.completion",
       created: Date.now(),
-      choices: [{
-        index: 0,
-        message: { role: "assistant", content: "This is a mock response." },
-        finish_reason: "stop"
-      }],
-      usage: { prompt_tokens: 5, completion_tokens: 7, total_tokens: 12 }
+      choices: [
+        {
+          index: 0,
+          message: { role: "assistant", content: fullContent },
+          finish_reason: "stop",
+        },
+      ],
+      usage: {
+        prompt_tokens: 0,
+        completion_tokens: fullContent.length,
+        total_tokens: fullContent.length,
+      },
     };
+    console.log(`Returning full response: ${JSON.stringify(response)}`);
+    return response;
   }
 }
