@@ -91,6 +91,14 @@ app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res)
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+export function startServer() {
+  const server = app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+  return server;
+}
+
+// If running as a standalone Node process, start the server automatically.
+if (require.main === module) {
+  startServer();
+}
