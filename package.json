@@ -5,7 +5,21 @@
   "license": "ISC",
   "author": "Lutz Leonhardt",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "./out/extension.js",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "activationEvents": [
+    "onCommand:my-extension.copilot-proxy"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "my-extension.copilot-proxy",
+        "title": "Copilot Proxy"
+      }
+    ]
+  },
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/server.ts"
