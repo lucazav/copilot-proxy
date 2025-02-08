@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { startServer } from './server';
+import {ChatCompletionChunk, ChatCompletionRequest, ChatCompletionResponse} from './types';
 
 let serverInstance: ReturnType<typeof startServer> | undefined;
 
