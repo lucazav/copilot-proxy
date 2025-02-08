@@ -8,7 +8,7 @@
     - Define an array of allowed models: `["gpt-4o", "gpt-4o-mini", "o1", "o1-mini", "claude-3.5-sonnet"]`.
     - If `req.body.model` is not in the array, return a 400 response with `{ error: "Model <model> not supported" }`.
 
-- [ ] **Step 2: Branch Based on the `stream` Flag in `server.ts`**
+- [x] **Step 2: Branch Based on the `stream` Flag in `server.ts`**
   - **Task:** In the endpoint handler, branch logic for streaming vs. non-streaming requests.
   - **Test:**
     - For a streaming request (`stream: true`), verify that the server writes multiple HTTP chunks.
