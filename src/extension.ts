@@ -68,7 +68,7 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
               content: chunks[i],
             },
             index: 0,
-            finish_reason: i === chunks.length - 1 ? "stop" : null,
+            finish_reason: i === chunks.length - 1 ? "stop" : "",
           }]
         };
       }
