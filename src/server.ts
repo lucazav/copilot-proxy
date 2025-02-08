@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import { ChatCompletionRequest, ChatCompletionChunk, ChatCompletionChunkDelta } from './types';
+import { processChatRequest } from './extension';
 
 // Load environment variables from .env file if present
 dotenv.config();
