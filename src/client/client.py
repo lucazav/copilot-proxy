@@ -10,7 +10,7 @@ def run_litellm_non_stream():
     """Calls local server in non-stream mode using LiteLLM."""
     try:
         response = completion(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": "Hello from a non-stream test"}],
             stream=False
         )
@@ -22,7 +22,7 @@ def run_litellm_stream():
     """Calls local server in stream mode using LiteLLM."""
     try:
         response_stream = completion(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": "Hello from a streaming test"}],
             stream=True
         )
