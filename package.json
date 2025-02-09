@@ -48,7 +48,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "vsix": "vsce package"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
