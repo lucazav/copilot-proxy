@@ -17,7 +17,7 @@
     - If `stream` is true, call the asynchronous function (e.g., `processChatRequest`) and iterate over its yielded chunks, writing each with `res.write(...)`.
     - If `stream` is false, await the full result and then send it with `res.json(...)`.
 
-- [ ] **Step 3: Implement `processChatRequest` in `extension.ts`**
+- [x] **Step 3: Implement `processChatRequest` in `extension.ts`**
   - **Task:** Create a new async function `processChatRequest` that:
     1. Receives a `ChatCompletionRequest`.
     2. Maps the request messages to the format required by `vscode.LanguageModelChatMessage` (direct mapping).
