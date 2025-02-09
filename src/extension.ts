@@ -62,6 +62,13 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  // Register command to configure the port.
+  context.subscriptions.push(
+    vscode.commands.registerCommand('Copilot Proxy: Configure Port', () => {
+      configurePort();
+    })
+  );
+
   // Register a disposable to stop the server when the extension is deactivated.
   context.subscriptions.push({
     dispose: () => {
