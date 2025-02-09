@@ -8,7 +8,6 @@ import { processChatRequest } from './extension';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -58,7 +57,7 @@ app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res)
   }
 });
 
-export function startServer() {
+export function startServer(port: number = 3000) {
   const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
