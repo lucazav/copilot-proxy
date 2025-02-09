@@ -21,11 +21,11 @@ app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res)
   const { model, stream } = req.body;
 
   // Whitelist validation: Define allowed models.
-  const allowedModels = ["gpt-4o", "gpt-4o-mini", "o1", "o1-mini", "claude-3.5-sonnet"];
-  if (!allowedModels.includes(model)) {
-    console.log(`Model ${model} is not supported.`);
-    return res.status(400).json({ error: `Model ${model} not supported` });
-  }
+  // const allowedModels = ["gpt-4o", "gpt-4o-mini", "o1", "o1-mini", "claude-3.5-sonnet"];
+  // if (!allowedModels.includes(model)) {
+  //   console.log(`Model ${model} is not supported.`);
+  //   return res.status(400).json({ error: `Model ${model} not supported` });
+  // }
 
   console.log(JSON.stringify(req.body));
 

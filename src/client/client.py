@@ -11,7 +11,7 @@ def run_litellm_non_stream():
     try:
         response = completion(
             model="gpt-4o",
-            messages=[{"role": "user", "content": "Hello from a non-stream test"}],
+            messages=[{"role": "user", "content": "Create a fibonacci function in Python"}],
             stream=False
         )
         print("Non-streaming response:", response)
@@ -23,7 +23,7 @@ def run_litellm_stream():
     try:
         response_stream = completion(
             model="gpt-4o",
-            messages=[{"role": "user", "content": "Hello from a streaming test"}],
+            messages=[{"role": "user", "content": "Create a fibonacci function in Python"}],
             stream=True
         )
         print("Streaming response:")
