@@ -7,6 +7,10 @@
   "author": "Lutz Leonhardt",
   "type": "commonjs",
   "main": "./out/extension.js",
+  "files": [
+    "out",
+    "README.md"
+  ],
   "engines": {
     "vscode": "^1.70.0"
   },
