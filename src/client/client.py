@@ -1,11 +1,6 @@
 import os
 from litellm import completion
 
-# Configure environment to point LiteLLM to the local mock server.
-# "OPENAI_API_BASE" is recognized by LiteLLM to override the default OpenAI endpoint.
-os.environ["OPENAI_API_KEY"] = "test"  # Placeholder
-os.environ["OPENAI_API_BASE"] = "http://localhost:3000/v1"
-
 def run_litellm_non_stream():
     """Calls local server in non-stream mode using LiteLLM."""
     try:
