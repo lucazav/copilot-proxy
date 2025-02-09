@@ -90,12 +90,16 @@ export function deactivate() {
 
 export async function processChatRequest(request: ChatCompletionRequest): Promise<AsyncIterable<ChatCompletionChunk> | ChatCompletionResponse> {
   // Map request messages to vscode.LanguageModelChatMessage format.
-  // AI!: adjust the mapping: use .User() for user messages (role=="user" make case-insensetive check!) and .Assistant() for all others; use the max. 30 chars of the newest/latest user message for preview and add ... before
-  const chatMessages = request.messages.map((message) =>
-    vscode.LanguageModelChatMessage.User(message.content)
-  );
-  const lastMessage = request.messages[request.messages.length - 1]?.content || '';
-  const preview = lastMessage.length > 30 ? lastMessage.slice(-30) : lastMessage;
+  const chatMessages = request.messages.map(message => {
+    if (message.role.toLowerCase() === "user") {
+      return vscode.LanguageModelChatMessage.User(message.content);
+    } else {
+      return vscode.LanguageModelChatMessage.Assistant(message.content);
+    }
+  });
+  const userMessages = request.messages.filter(message => message.role.toLowerCase() === "user");
+  const latestUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
+  const preview = latestUserMessage.length > 30 ? "..." + latestUserMessage.slice(-30) : latestUserMessage;
   outputChannel.appendLine(`Request received. Model: ${request.model}. Preview: ${preview}`);
 
   const [selectedModel] = await vscode.lm.selectChatModels({
