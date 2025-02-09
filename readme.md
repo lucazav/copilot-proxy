@@ -62,5 +62,5 @@ Contributions, bug reports, and feature requests are welcome! Please submit issu
 
 ## License
 
-This project is licensed under the ISC License.
+This project is licensed under the MIT License.
 
