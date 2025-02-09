@@ -70,60 +70,96 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
   console.log(`Selected language model: ${request.model}`);
 
   if (request.stream) {
-    // Streaming mode: return an async generator yielding simulated response chunks.
+    // Streaming mode: call the real backend and yield response chunks.
     return (async function* () {
-      const simulatedFragments = [
-        "This is a",
-        " simulated",
-        " streamed response.",
-      ];
-      for (let i = 0; i < simulatedFragments.length; i++) {
-        const chunk: ChatCompletionChunk = {
-          id: `chatcmpl-stream-${i}`,
+      try {
+        const cancellationSource = new vscode.CancellationTokenSource();
+        const chatResponse = await selectedModel.sendRequest(
+          chatMessages,
+          {},
+          cancellationSource.token
+        );
+        let firstChunk = true;
+        let chunkIndex = 0;
+        // Iterate over the response fragments from the real backend.
+        for await (const fragment of chatResponse.text) {
+          const chunk: ChatCompletionChunk = {
+            id: `chatcmpl-stream-${chunkIndex}`,
+            object: "chat.completion.chunk",
+            created: Date.now(),
+            model: request.model,
+            choices: [
+              {
+                delta: {
+                  ...(firstChunk ? { role: "assistant" } : {}),
+                  content: fragment,
+                },
+                index: 0,
+                finish_reason: "",
+              },
+            ],
+          };
+          firstChunk = false;
+          chunkIndex++;
+          console.log(`Yielding chunk: ${JSON.stringify(chunk)}`);
+          yield chunk;
+        }
+        // After finishing the iteration, yield a final chunk to indicate completion.
+        const finalChunk: ChatCompletionChunk = {
+          id: `chatcmpl-stream-final`,
           object: "chat.completion.chunk",
           created: Date.now(),
           model: request.model,
           choices: [
             {
-              delta: {
-                ...(i === 0 ? { role: "assistant" } : {}),
-                content: simulatedFragments[i],
-              },
+              delta: { content: "" },
               index: 0,
-              finish_reason: i === simulatedFragments.length - 1 ? "stop" : "",
+              finish_reason: "stop",
             },
           ],
         };
-        console.log(`Yielding chunk: ${JSON.stringify(chunk)}`);
-        yield chunk;
+        console.log(`Yielding final chunk: ${JSON.stringify(finalChunk)}`);
+        yield finalChunk;
+      } catch (error) {
+        console.error("Error in streaming mode:", error);
+        throw error;
       }
     })();
   } else {
-    // Non-streaming mode: accumulate simulated fragments and return the full response.
-    const simulatedFragments = [
-      "This is a",
-      " simulated non-streamed",
-      " response.",
-    ];
-    const fullContent = simulatedFragments.join("");
-    const response: ChatCompletionResponse = {
-      id: "chatcmpl-nonstream",
-      object: "chat.completion",
-      created: Date.now(),
-      choices: [
-        {
-          index: 0,
-          message: { role: "assistant", content: fullContent },
-          finish_reason: "stop",
+    // Non-streaming mode: call the real backend and accumulate the full response.
+    try {
+      const cancellationSource = new vscode.CancellationTokenSource();
+      const chatResponse = await selectedModel.sendRequest(
+        chatMessages,
+        {},
+        cancellationSource.token
+      );
+      let fullContent = "";
+      for await (const fragment of chatResponse.text) {
+        fullContent += fragment;
+      }
+      const response: ChatCompletionResponse = {
+        id: "chatcmpl-nonstream",
+        object: "chat.completion",
+        created: Date.now(),
+        choices: [
+          {
+            index: 0,
+            message: { role: "assistant", content: fullContent },
+            finish_reason: "stop",
+          },
+        ],
+        usage: {
+          prompt_tokens: 0,
+          completion_tokens: fullContent.length,
+          total_tokens: fullContent.length,
         },
-      ],
-      usage: {
-        prompt_tokens: 0,
-        completion_tokens: fullContent.length,
-        total_tokens: fullContent.length,
-      },
-    };
-    console.log(`Returning full response: ${JSON.stringify(response)}`);
-    return response;
+      };
+      console.log(`Returning full response: ${JSON.stringify(response)}`);
+      return response;
+    } catch (error) {
+      console.error("Error in non-streaming mode:", error);
+      throw error;
+    }
   }
 }
