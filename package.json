@@ -15,6 +15,17 @@
     "onCommand:Copilot Proxy - Stop Server"
   ],
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Copilot Proxy",
+      "properties": {
+        "copilotProxy.port": {
+          "type": "number",
+          "default": 3000,
+          "description": "Port for the Express server."
+        }
+      }
+    },
     "commands": [
       {
         "command": "Copilot Proxy - Start Server",
@@ -23,6 +34,10 @@
       {
         "command": "Copilot Proxy - Stop Server",
         "title": "Copilot Proxy - Stop Server"
+      },
+      {
+        "command": "Copilot Proxy: Configure Port",
+        "title": "Copilot Proxy: Configure Port"
       }
     ]
   },
