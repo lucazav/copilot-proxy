@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
   outputChannel = vscode.window.createOutputChannel('Copilot Proxy Log');
   outputChannel.show();
   context.subscriptions.push(outputChannel);
-  outputChannel.appendLine('Extension "my-extension" is now active!');
+  outputChannel.appendLine('Extension "Copilot Proxy" is now active!');
 
   // Register command to start the Express server.
   context.subscriptions.push(
