@@ -56,6 +56,53 @@ You can change this setting in two ways:
 
 On the initial request (e.g., when using Aider or other AI assistants), VS Code will prompt you to grant permission for the extension to interact with the VS Code Language Model API. Please grant permission to ensure proper operation.
 
+### Usage in aider
+
+You need to configure aider to use the proxy server for the chosen models which are supported by GitHub Copilot.
+These are at the moment: "gpt-4o", "gpt-4o-mini", "o1", "o1-mini", "claude-3.5-sonnet", and "o3-mini" (also depending on your subscription).
+To make this work, you need to create a file `.aider.model.settings.yml` in your home directory or in one of the other supported locations. (see [Configuration file locations](https://aider.chat/docs/config/adv-model-settings.html))
+
+The content of the file should look like this:
+
+```yaml
+# "claude-3-5-sonnet-20241022" is the model name used in aider
+# "openai/claude-3.5-sonnet"
+# => "openai" tells LiteLLM to call an OpenAI-like endpoint
+# => "claude-3.5-sonnet" matches the copilot model name
+- name: claude-3-5-sonnet-20241022
+  extra_params:
+    model: openai/claude-3.5-sonnet
+    api_key: n/a
+    api_base: http://localhost:3000/v1
+
+
+# "openrouter/anthropic/claude-3.5-sonnet" is the model name used in aider
+# "openai/claude-3.5-sonnet"
+# => "openai" tells LiteLLM to call an OpenAI-like endpoint
+# => "claude-3.5-sonnet" matches the copilot model name
+- name: openrouter/anthropic/claude-3.5-sonnet
+  extra_params:
+    model: openai/claude-3.5-sonnet
+    api_key: n/a
+    api_base: http://localhost:3000/v1
+
+# "o3-mini" is the model name in aider
+# "o3-mini" is already a OpenAI-like API and o3-mini is also matching the name in copilot
+- name: o3-mini
+  extra_params:
+    api_key: n/a
+    api_base: http://localhost:3000/v1
+
+# this config is using the copilot LM for ALL models in aider
+# BUT this only works for OpenAI-like models and when the name in aider/LiteLLM matches the name in copilot
+# so this is mainly working for all supported openai models like GPT-4o, o1, o3-mini
+- name: aider/extra_params
+  extra_params:
+    api_key: n/a
+    api_base: http://localhost:3000/v1            
+```
+
+
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! Please submit issues or pull requests in the [GitHub repository](https://github.com/yourusername/copilot-proxy).
