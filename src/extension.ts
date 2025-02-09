@@ -16,8 +16,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('Copilot Proxy - Start Server', () => {
       if (!serverInstance) {
-        serverInstance = startServer();
-        vscode.window.showInformationMessage('Express server started.');
+        const configPort = vscode.workspace.getConfiguration("copilotProxy").get("port", 3000);
+        serverInstance = startServer(configPort);
+        vscode.window.showInformationMessage(`Express server started on port ${configPort}.`);
       } else {
         vscode.window.showInformationMessage('Express server is already running.');
       }
