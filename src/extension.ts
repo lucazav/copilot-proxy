@@ -29,6 +29,7 @@ function configurePort() {
   });
 }
 
+
 export function activate(context: vscode.ExtensionContext) {
   outputChannel = vscode.window.createOutputChannel('Copilot Proxy Log');
   outputChannel.show();
