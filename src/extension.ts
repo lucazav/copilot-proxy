@@ -61,9 +61,10 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
   const chatMessages = request.messages.map((message) =>
     vscode.LanguageModelChatMessage.User(message.content)
   );
-  outputChannel.appendLine("Mapped chat messages: " + JSON.stringify(chatMessages));
+  const lastMessage = request.messages[request.messages.length - 1]?.content || '';
+  const preview = lastMessage.length > 30 ? lastMessage.slice(-30) : lastMessage;
+  outputChannel.appendLine(`Request received. Model: ${request.model}. Preview: ${preview}`);
 
-  // Select the language model based on the provided model name.
   const [selectedModel] = await vscode.lm.selectChatModels({
     vendor: "copilot",
     family: request.model,
@@ -72,7 +73,6 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
     outputChannel.appendLine(`ERROR: No language model available for model: ${request.model}`);
     throw new Error(`No language model available for model: ${request.model}`);
   }
-  outputChannel.appendLine(`Selected language model: ${request.model}`);
 
   if (request.stream) {
     // Streaming mode: call the real backend and yield response chunks.
@@ -106,7 +106,6 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
           };
           firstChunk = false;
           chunkIndex++;
-          outputChannel.appendLine(`Yielding chunk: ${JSON.stringify(chunk)}`);
           yield chunk;
         }
         // After finishing the iteration, yield a final chunk to indicate completion.
@@ -123,7 +122,6 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
             },
           ],
         };
-        outputChannel.appendLine(`Yielding final chunk: ${JSON.stringify(finalChunk)}`);
         yield finalChunk;
       } catch (error) {
         outputChannel.appendLine("ERROR: Error in streaming mode: " + JSON.stringify(error));
@@ -160,7 +158,6 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
           total_tokens: fullContent.length,
         },
       };
-      outputChannel.appendLine(`Returning full response: ${JSON.stringify(response)}`);
       return response;
     } catch (error) {
       outputChannel.appendLine("ERROR: Error in non-streaming mode: " + JSON.stringify(error));
