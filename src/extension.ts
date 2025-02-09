@@ -1,11 +1,16 @@
 import * as vscode from 'vscode';
+
+let outputChannel: vscode.OutputChannel;
 import { startServer } from './server';
 import {ChatCompletionChunk, ChatCompletionRequest, ChatCompletionResponse} from './types';
 
 let serverInstance: ReturnType<typeof startServer> | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Extension "my-extension" is now active!');
+  outputChannel = vscode.window.createOutputChannel('Copilot Proxy Log');
+  outputChannel.show();
+  context.subscriptions.push(outputChannel);
+  outputChannel.appendLine('Extension "my-extension" is now active!');
 
   // Register command to start the Express server.
   context.subscriptions.push(
@@ -37,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
     dispose: () => {
       if (serverInstance) {
         serverInstance.close();
-        console.log('Express server has been stopped.');
+        outputChannel.appendLine('Express server has been stopped.');
       }
     }
   });
@@ -47,7 +52,7 @@ export function deactivate() {
   if (serverInstance) {
     serverInstance.close();
     serverInstance = undefined;
-    console.log('Express server has been stopped on deactivation.');
+    outputChannel.appendLine('Express server has been stopped on deactivation.');
   }
 }
 
@@ -56,7 +61,7 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
   const chatMessages = request.messages.map((message) =>
     vscode.LanguageModelChatMessage.User(message.content)
   );
-  console.log("Mapped chat messages:", chatMessages);
+  outputChannel.appendLine("Mapped chat messages: " + JSON.stringify(chatMessages));
 
   // Select the language model based on the provided model name.
   const [selectedModel] = await vscode.lm.selectChatModels({
@@ -64,10 +69,10 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
     family: request.model,
   });
   if (!selectedModel) {
-    console.error(`No language model available for model: ${request.model}`);
+    outputChannel.appendLine(`ERROR: No language model available for model: ${request.model}`);
     throw new Error(`No language model available for model: ${request.model}`);
   }
-  console.log(`Selected language model: ${request.model}`);
+  outputChannel.appendLine(`Selected language model: ${request.model}`);
 
   if (request.stream) {
     // Streaming mode: call the real backend and yield response chunks.
@@ -101,7 +106,7 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
           };
           firstChunk = false;
           chunkIndex++;
-          console.log(`Yielding chunk: ${JSON.stringify(chunk)}`);
+          outputChannel.appendLine(`Yielding chunk: ${JSON.stringify(chunk)}`);
           yield chunk;
         }
         // After finishing the iteration, yield a final chunk to indicate completion.
@@ -118,10 +123,10 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
             },
           ],
         };
-        console.log(`Yielding final chunk: ${JSON.stringify(finalChunk)}`);
+        outputChannel.appendLine(`Yielding final chunk: ${JSON.stringify(finalChunk)}`);
         yield finalChunk;
       } catch (error) {
-        console.error("Error in streaming mode:", error);
+        outputChannel.appendLine("ERROR: Error in streaming mode: " + JSON.stringify(error));
         throw error;
       }
     })();
@@ -155,10 +160,10 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
           total_tokens: fullContent.length,
         },
       };
-      console.log(`Returning full response: ${JSON.stringify(response)}`);
+      outputChannel.appendLine(`Returning full response: ${JSON.stringify(response)}`);
       return response;
     } catch (error) {
-      console.error("Error in non-streaming mode:", error);
+      outputChannel.appendLine("ERROR: Error in non-streaming mode: " + JSON.stringify(error));
       throw error;
     }
   }
