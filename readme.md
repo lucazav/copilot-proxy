@@ -5,7 +5,9 @@
 Copilot Proxy is a Visual Studio Code extension that exposes the VS Code Language Model API via an Express server. This experimental extension is intended solely for research and prototyping purposes and should not be used in production environments.
 
 **Disclaimer:**  
-This extension is provided as an experiment only. It integrates the VS Code LM in a way that has been extensively explored in chats with the cline community. While these discussions have revealed both promising capabilities and notable risks, I am not recommending the use of the VS Code LM through external programs. Use this extension at your own risk.
+This extension is provided as an experiment only. In the past, some users, i.e., cline users, faced bans due to excessive usage. Since Microsoft introduced rate limits to the VS Code LM, no further bans have been reported. Nevertheless, I do not recommend using this extension for anything beyond research and prototyping.
+
+At the moment, the supported LLMs by GitHub Copilot are: "gpt-4o", "gpt-4o-mini", "o1", "o1-mini", "claude-3.5-sonnet", and "o3-mini".
 
 ## Features
 
@@ -16,17 +18,17 @@ This extension is provided as an experiment only. It integrates the VS Code LM i
 ## Installation
 
 1. **Download the VSIX Package:**
-   - Visit the [GitHub Releases](https://github.com/yourusername/copilot-proxy/releases) page.
-   - Download the latest `.vsix` file.
+  - Visit the [GitHub Releases](https://github.com/yourusername/copilot-proxy/releases) page.
+  - Download the latest `.vsix` file.
 
 2. **Install the Extension:**
-   - Open Visual Studio Code.
-   - Go to the Extensions view (`Ctrl+Shift+X` on Windows/Linux or `Cmd+Shift+X` on macOS).
-   - Click on the three-dot menu (`...`) and choose **"Install from VSIX..."**.
-   - Select the downloaded `.vsix` file.
+  - Open Visual Studio Code.
+  - Go to the Extensions view (`Ctrl+Shift+X` on Windows/Linux or `Cmd+Shift+X` on macOS).
+  - Click on the three-dot menu (`...`) and choose **"Install from VSIX..."**.
+  - Select the downloaded `.vsix` file.
 
 3. **Reload VS Code:**
-   - Accept the prompt to reload the window and activate the extension.
+  - Accept the prompt to reload the window and activate the extension.
 
 ## Configuration
 
@@ -54,11 +56,6 @@ You can change this setting in two ways:
 
 On the initial request (e.g., when using Aider or other AI assistants), VS Code will prompt you to grant permission for the extension to interact with the VS Code Language Model API. Please grant permission to ensure proper operation.
 
-## Future Enhancements
-
-- **Screenshots & Visual Guides:** Screenshots and more detailed usage guides will be added in later updates.
-- **Enhanced Configuration:** Based on user feedback, additional configuration options may be introduced.
-
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! Please submit issues or pull requests in the [GitHub repository](https://github.com/yourusername/copilot-proxy).
@@ -66,3 +63,4 @@ Contributions, bug reports, and feature requests are welcome! Please submit issu
 ## License
 
 This project is licensed under the ISC License.
+
