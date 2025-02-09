@@ -27,8 +27,6 @@ app.post<{}, {}, ChatCompletionRequest>('/v1/chat/completions', async (req, res)
   //   return res.status(400).json({ error: `Model ${model} not supported` });
   // }
 
-  console.log(JSON.stringify(req.body));
-
   if (stream) {
     // Set headers for streaming.
     res.setHeader('Content-Type', 'text/event-stream');
