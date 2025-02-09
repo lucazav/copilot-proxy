@@ -98,10 +98,9 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
       return vscode.LanguageModelChatMessage.Assistant(message.content);
     }
   });
-  // AI!: instead of the last 30chars, show the first max. 30 chars of the last user message
   const userMessages = request.messages.filter(message => message.role.toLowerCase() === "user");
   const latestUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
-  const preview = latestUserMessage.length > 30 ? "..." + latestUserMessage.slice(-30) : latestUserMessage;
+  const preview = latestUserMessage.length > 30 ? latestUserMessage.slice(0, 30) : latestUserMessage;
   outputChannel.appendLine(`Request received. Model: ${request.model}. Preview: ${preview}`);
 
   const [selectedModel] = await vscode.lm.selectChatModels({
