@@ -89,6 +89,7 @@ export function deactivate() {
 }
 
 export async function processChatRequest(request: ChatCompletionRequest): Promise<AsyncIterable<ChatCompletionChunk> | ChatCompletionResponse> {
+  // outputChannel.appendLine("processChatRequest called with request: " + JSON.stringify(request, null, 2));
   // Map request messages to vscode.LanguageModelChatMessage format.
   const chatMessages = request.messages.map(message => {
     if (message.role.toLowerCase() === "user") {
@@ -97,6 +98,7 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
       return vscode.LanguageModelChatMessage.Assistant(message.content);
     }
   });
+  // AI!: instead of the last 30chars, show the first max. 30 chars of the last user message
   const userMessages = request.messages.filter(message => message.role.toLowerCase() === "user");
   const latestUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
   const preview = latestUserMessage.length > 30 ? "..." + latestUserMessage.slice(-30) : latestUserMessage;
