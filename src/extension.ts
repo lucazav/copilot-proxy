@@ -6,6 +6,29 @@ import {ChatCompletionChunk, ChatCompletionRequest, ChatCompletionResponse} from
 
 let serverInstance: ReturnType<typeof startServer> | undefined;
 
+function configurePort() {
+  const config = vscode.workspace.getConfiguration("copilotProxy");
+  const currentPort = config.get<number>("port", 3000);
+  vscode.window.showInputBox({
+    prompt: "Enter the port for the Express server:",
+    placeHolder: "e.g., 3000",
+    value: String(currentPort),
+    validateInput: (value: string): string | undefined => {
+      const port = Number(value);
+      if (isNaN(port) || port <= 0) {
+        return "Please enter a valid positive integer for the port.";
+      }
+      return undefined;
+    }
+  }).then(newPortStr => {
+    if (newPortStr !== undefined) {
+      const newPort = Number(newPortStr);
+      config.update("port", newPort, vscode.ConfigurationTarget.Global);
+      vscode.window.showInformationMessage(`Port updated to ${newPort}. Restart the server if it's running.`);
+    }
+  });
+}
+
 export function activate(context: vscode.ExtensionContext) {
   outputChannel = vscode.window.createOutputChannel('Copilot Proxy Log');
   outputChannel.show();
