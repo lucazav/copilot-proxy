@@ -5,6 +5,10 @@
   "publisher": "PoAI",
   "license": "ISC",
   "author": "Lutz Leonhardt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/copilot-proxy.git"
+  },
   "type": "commonjs",
   "main": "./out/extension.js",
   "files": [
