@@ -12,7 +12,8 @@
   },
   "activationEvents": [
     "onCommand:Copilot Proxy - Start Server",
-    "onCommand:Copilot Proxy - Stop Server"
+    "onCommand:Copilot Proxy - Stop Server",
+    "onCommand:Copilot Proxy: Configure Port"
   ],
   "contributes": {
     "configuration": {
