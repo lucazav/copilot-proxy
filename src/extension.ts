@@ -89,7 +89,15 @@ export function deactivate() {
 }
 
 export async function processChatRequest(request: ChatCompletionRequest): Promise<AsyncIterable<ChatCompletionChunk> | ChatCompletionResponse> {
-  // outputChannel.appendLine("processChatRequest called with request: " + JSON.stringify(request, null, 2));
+  const userMessages = request.messages.filter(message => message.role.toLowerCase() === "user");
+  const latestUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
+  const preview = typeof latestUserMessage === 'string' 
+    ? (latestUserMessage.length > 30 ? latestUserMessage.slice(0, 30) + '...' : latestUserMessage)
+    : JSON.stringify(latestUserMessage);
+  
+  outputChannel.appendLine(`Request received. Model: ${request.model}. Preview: ${preview}`);
+  outputChannel.appendLine(`Full messages: ${JSON.stringify(request.messages, null, 2)}`);
+  
   // Map request messages to vscode.LanguageModelChatMessage format.
   const chatMessages = request.messages.map(message => {
     if (message.role.toLowerCase() === "user") {
@@ -98,10 +106,6 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
       return vscode.LanguageModelChatMessage.Assistant(message.content);
     }
   });
-  const userMessages = request.messages.filter(message => message.role.toLowerCase() === "user");
-  const latestUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
-  const preview = latestUserMessage.length > 30 ? latestUserMessage.slice(0, 30) : latestUserMessage;
-  outputChannel.appendLine(`Request received. Model: ${request.model}. Preview: ${preview}`);
 
   const [selectedModel] = await vscode.lm.selectChatModels({
     vendor: "copilot",
@@ -162,7 +166,13 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
         };
         yield finalChunk;
       } catch (error) {
-        outputChannel.appendLine("ERROR: Error in streaming mode: " + JSON.stringify(error));
+        outputChannel.appendLine("ERROR: Error in streaming mode:");
+        if (error instanceof Error) {
+          outputChannel.appendLine(`Message: ${error.message}`);
+          outputChannel.appendLine(`Stack: ${error.stack}`);
+        } else {
+          outputChannel.appendLine(`Unknown error type: ${JSON.stringify(error)}`);
+        }
         throw error;
       }
     })();
@@ -198,7 +208,13 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
       };
       return response;
     } catch (error) {
-      outputChannel.appendLine("ERROR: Error in non-streaming mode: " + JSON.stringify(error));
+      outputChannel.appendLine("ERROR: Error in non-streaming mode:");
+      if (error instanceof Error) {
+        outputChannel.appendLine(`Message: ${error.message}`);
+        outputChannel.appendLine(`Stack: ${error.stack}`);
+      } else {
+        outputChannel.appendLine(`Unknown error type: ${JSON.stringify(error)}`);
+      }
       throw error;
     }
   }
