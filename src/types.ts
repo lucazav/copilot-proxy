@@ -1,6 +1,11 @@
+export interface StructuredMessageContent {
+  type: string;
+  text: string;
+}
+
 export interface ChatMessage {
   role: string;
-  content: string;
+  content: string | StructuredMessageContent[];
 }
 
 export interface ChatCompletionRequest {

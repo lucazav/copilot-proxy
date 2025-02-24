@@ -2,7 +2,12 @@ import * as vscode from 'vscode';
 
 let outputChannel: vscode.OutputChannel;
 import { startServer } from './server';
-import {ChatCompletionChunk, ChatCompletionRequest, ChatCompletionResponse} from './types';
+import {
+  ChatCompletionChunk,
+  ChatCompletionRequest,
+  ChatCompletionResponse,
+  StructuredMessageContent
+} from './types';
 
 let serverInstance: ReturnType<typeof startServer> | undefined;
 
@@ -88,6 +93,16 @@ export function deactivate() {
   }
 }
 
+function extractMessageContent(content: string | StructuredMessageContent[]): string {
+  if (typeof content === 'string') {
+    return content;
+  }
+  if (Array.isArray(content)) {
+    return content.map(item => item.text).join('\n');
+  }
+  return String(content);
+}
+
 export async function processChatRequest(request: ChatCompletionRequest): Promise<AsyncIterable<ChatCompletionChunk> | ChatCompletionResponse> {
   const userMessages = request.messages.filter(message => message.role.toLowerCase() === "user");
   const latestUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
@@ -98,12 +113,13 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
   outputChannel.appendLine(`Request received. Model: ${request.model}. Preview: ${preview}`);
   outputChannel.appendLine(`Full messages: ${JSON.stringify(request.messages, null, 2)}`);
   
-  // Map request messages to vscode.LanguageModelChatMessage format.
+  // Map request messages to vscode.LanguageModelChatMessage format with content extraction
   const chatMessages = request.messages.map(message => {
+    const processedContent = extractMessageContent(message.content);
     if (message.role.toLowerCase() === "user") {
-      return vscode.LanguageModelChatMessage.User(message.content);
+      return vscode.LanguageModelChatMessage.User(processedContent);
     } else {
-      return vscode.LanguageModelChatMessage.Assistant(message.content);
+      return vscode.LanguageModelChatMessage.Assistant(processedContent);
     }
   });
 
@@ -175,7 +191,7 @@ export async function processChatRequest(request: ChatCompletionRequest): Promis
         }
         throw error;
       }
-    })();
+    })();  // Add parentheses here to properly close and invoke the IIFE
   } else {
     // Non-streaming mode: call the real backend and accumulate the full response.
     try {
