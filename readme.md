@@ -5,6 +5,7 @@
 Copilot Proxy is a Visual Studio Code extension that exposes the VS Code Language Model API via an Express server. This experimental extension is intended solely for research and prototyping purposes and should not be used in production environments.
 
 [![Watch the video](https://img.youtube.com/vi/i1I2CAPOXHM/maxresdefault.jpg)](https://youtu.be/i1I2CAPOXHM)
+[YouTube Explanation](https://youtu.be/i1I2CAPOXHM)
 
 **Disclaimer:**  
 This extension is provided as an experiment only. In the past, some users, i.e., cline users, faced bans due to excessive usage. Since Microsoft introduced rate limits to the VS Code LM, no further bans have been reported. Nevertheless, I do not recommend using this extension for anything beyond research and prototyping.
