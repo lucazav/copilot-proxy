@@ -53,7 +53,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/server.ts",
-    "vsix": "vsce package"
+    "vsix": "vsce package --skip-license"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
