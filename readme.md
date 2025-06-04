@@ -37,12 +37,18 @@ At the moment, the supported LLMs by GitHub Copilot are: "gpt-4o", "gpt-4o-mini"
 
 The extension provides a configuration setting to specify the port for the Express server:
 
-- **Setting:** `copilotProxy.port`  
+- **Setting:** `copilotProxy.port`
   **Default:** `3000`
 
 You can change this setting in two ways:
 - **Via Settings UI:** Open the VS Code Settings (`Ctrl+,` or `Cmd+,`) and search for "Copilot Proxy".
 - **Via Command Palette:** Run the command **"Copilot Proxy: Configure Port"** to interactively set the port.
+
+### Adjusting Request Size Limit
+
+The proxy limits JSON request bodies to 5&nbsp;MB by default. If you encounter
+`PayloadTooLargeError`, set the environment variable `JSON_LIMIT` to a higher
+value (e.g., `10mb`) before starting the server.
 
 ## Using the Extension
 
