@@ -21,8 +21,9 @@ At the moment, the supported LLMs by GitHub Copilot are: "gpt-4o", "gpt-4o-mini"
 ## Installation
 
 1. **Download the VSIX Package:**
-  - Visit the [GitHub Releases](https://github.com/lutzleonhardt/copilot-proxy/releases) page.
-  - Download the latest `.vsix` file.
+   - Visit the [GitHub Releases](https://github.com/lucazav/copilot-proxy/releases) page.
+   - Download the latest `.vsix` file. The package is automatically built and
+     uploaded whenever a new version tag (`v*.*.*`) is pushed.
 
 2. **Install the Extension:**
   - Open Visual Studio Code.
