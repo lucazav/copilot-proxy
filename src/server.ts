@@ -9,8 +9,9 @@ dotenv.config();
 
 const app = express();
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// Middleware to parse JSON bodies with configurable limit
+const jsonLimit = process.env.JSON_LIMIT || '5mb';
+app.use(express.json({ limit: jsonLimit }));
 
 // Logger middleware
 app.use(morgan('combined'));
